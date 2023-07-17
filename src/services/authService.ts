@@ -17,7 +17,7 @@ export function authGenerateToken(payload: Record<string, any>) {
 
 export function authVerifyToken(token: string) {
   if (token.startsWith("Bearer ")) {
-    token.replace("Bearer ", "");
+    token = token.split(" ")[1];
   }
 
   const bytes = CryptoJS.AES.decrypt(token, secret);

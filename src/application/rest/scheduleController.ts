@@ -1,6 +1,10 @@
 import { Env } from "../..";
+import { Schedule } from "../../models/ScheduleModel";
 import { authGetUserId, authVerifyToken } from "../../services/authService";
-import { utilErrorResponse } from "../../services/utilService";
+import {
+  utilErrorResponse,
+  utilSuccessResponse,
+} from "../../services/utilService";
 
 export default async function (
   pathname: string,
@@ -42,7 +46,19 @@ export default async function (
       return utilErrorResponse("Not Implemented", 501);
     }
 
-    return utilErrorResponse("Not Implemented", 501);
+    try {
+      const data = await env.DB.prepare(
+        "SELECT * FROM schedules WHERE user_id = ?"
+      )
+        .bind(userId)
+        .all();
+      const results = data.results as any as Schedule[];
+
+      return utilSuccessResponse(results);
+    } catch (e) {
+      console.log(e);
+      return utilErrorResponse("Internal Error", 500);
+    }
   }
 
   return utilErrorResponse(`Not Found "${pathname}" in "/api/schedule"`, 404);
