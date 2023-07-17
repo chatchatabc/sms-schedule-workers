@@ -1,5 +1,6 @@
 import { Env } from "../..";
 import { User } from "../../models/UserModel";
+import { authGenerateToken } from "../../services/authService";
 import {
   utilErrorResponse,
   utilSuccessResponse,
@@ -40,7 +41,13 @@ export default async function (
       }
 
       delete user.password;
-      return utilSuccessResponse(user);
+      const response = utilSuccessResponse(user);
+
+      // create JWT
+      const token = authGenerateToken({ id: user.id });
+      response.headers.set("X-Access-Token", token);
+
+      return response;
     } catch (e) {
       console.log(e);
       return utilErrorResponse("Internal Error", 500);
