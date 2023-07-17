@@ -1,5 +1,6 @@
 import { utilErrorResponse, utilSuccessResponse } from "./services/utilService";
 import authController from "./application/rest/authController";
+import scheduleController from "./application/rest/scheduleController";
 
 export interface Env {
   TWILIO: KVNamespace;
@@ -26,19 +27,16 @@ export default {
       return utilSuccessResponse(null);
     }
 
-    // Handle POST requests
-    if (request.method === "POST") {
-      const body = await request.json();
-
-      if (pathname.startsWith("/auth")) {
-        pathname = pathname.slice(5);
-        return authController(pathname, body, env, ctx);
-      }
+    // Handle auth requests
+    if (pathname.startsWith("/auth")) {
+      pathname = pathname.slice(5);
+      return authController(pathname, request, env, ctx);
     }
 
-    // Handle GET requests
-    if (request.method === "GET") {
-      return utilSuccessResponse("Hello World! GET");
+    // Handle schedule requests
+    if (pathname.startsWith("/schedule")) {
+      pathname = pathname.slice(9);
+      return scheduleController(pathname, request, env, ctx);
     }
 
     return utilErrorResponse(`Not Found "${pathname}" in "/api"`, 404);
