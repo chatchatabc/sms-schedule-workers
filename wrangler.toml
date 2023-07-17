@@ -1,0 +1,15 @@
+name = "twilio-actions"
+main = "src/index.ts"
+compatibility_date = "2023-07-14"
+
+kv_namespaces = [
+  { binding = "TWILIO", id = "b2015eb02078490b9d73a61986f24b38", preview_id = "eec362dc005644aca044b11ee1b66adb" },
+]
+
+[triggers]
+crons = ["0 */1 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "twilio"
+database_id = "2a17e19b-e14e-4c8d-a004-8ad6c1725454"
